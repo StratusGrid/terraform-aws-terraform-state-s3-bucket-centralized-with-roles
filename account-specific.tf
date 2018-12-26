@@ -66,7 +66,7 @@ data "aws_iam_policy_document" "account_specific_policy" {
       "dynamodb:UpdateItem"
     ]
     resources = [
-      "${aws_dynamodb_table.remote_state_backend.*.arn[count.index]}"
+      "${aws_dynamodb_table.remote_state_backend.arn}"
     ]
     sid       = "AllowAccessToLockTable"
   }
