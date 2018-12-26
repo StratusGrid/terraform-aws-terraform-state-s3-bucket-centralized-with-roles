@@ -1,5 +1,5 @@
 locals {
-  account_from_arn = "/^([^:]*)+:([^:]*)+:([^:]*)+:([^:]*)+:([^:]*)+:([^/]*)+/([^/]*)$/"
+  account_from_arn = "/^([^:]*)+:([^:]*)+:([^:]*)+:([^:]*)+:([^:]*)+:([^/]*)+(/([^/]*))?$/"
 }
 
 resource "aws_kms_key" "specific_remote_state_backend" {
