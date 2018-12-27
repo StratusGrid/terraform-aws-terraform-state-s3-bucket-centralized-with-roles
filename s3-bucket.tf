@@ -1,11 +1,11 @@
 resource "aws_s3_bucket" "remote_state_backend" {
-  bucket = "${var.name_prefix}-remote-state-backend"
+  bucket = "${var.name_prefix}-remote-state-backend-${random_string.unique_resource_string.result}"
   lifecycle {
     prevent_destroy = true
   }
   logging {
     target_bucket = "${var.log_bucket_id}"
-    target_prefix = "s3/${var.name_prefix}-remote-state-backend/"
+    target_prefix = "s3/${var.name_prefix}-remote-state-backend-${random_string.unique_resource_string.result}/"
   }
   server_side_encryption_configuration {
     rule {
