@@ -95,17 +95,10 @@ data "aws_iam_policy_document" "assume_role_policy" {
   }
 }
 
-resource "aws_iam_policy" "assume_role_policy" {
-  count = "${length(var.account_arns)}"
-  name        = "${replace(var.account_arns[count.index], local.account_from_arn, "$5")}-terraform-state-assumption-policy"
-  description = "Policy to allow assumption of ${replace(var.account_arns[count.index], local.account_from_arn, "$5")}-terraform-state role"
-  policy      = "${data.aws_iam_policy_document.assume_role_policy.*.json[count.index]}"
-}
-
 resource "aws_iam_role" "account_state_role" {
   count = "${length(var.account_arns)}"
   name               = "${replace(var.account_arns[count.index], local.account_from_arn, "$5")}-terraform-state"
-  assume_role_policy = "${aws_iam_policy.assume_role_policy.*.arn[count.index]}"
+  assume_role_policy = "${data.aws_iam_policy_document.assume_role_policy.*.json[count.index]}"
 }
 
 resource "aws_iam_role_policy_attachment" "account_state_role" {
