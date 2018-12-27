@@ -4,6 +4,7 @@ variable "name_prefix" {
 }
 
 variable "log_bucket_id" {
+  description = "ID of logging bucket to be targeted for S3 bucket logs"
   type = "string"
 }
 
