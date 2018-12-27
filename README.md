@@ -39,3 +39,5 @@ terraform {
 terraform init -backend-config="access_key=AKIAIOIEXAMPLEOXJA" -backend-config="secret_key=PiNMLcNOTAREALKEYGQGzz20v3"
 ```
 NOTE: The access and secret keys used must have rights to assume the role created by the module
+- This is usually automatically the case for any keys that have full admin rights in the account whose state is to be stored, or in one of the global accounts specified.
+- Otherwise, this will need to be assigned manually. A module which assigns this right is to be released soon.
