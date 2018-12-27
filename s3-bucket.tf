@@ -99,7 +99,7 @@ data "aws_iam_policy_document" "encrypted_transit_bucket_policy" {
       "s3:PutObject"
     ]
     condition {
-      test      = "StringEquals"
+      test      = "StringNotEquals"
       values    = [
         "bucket-owner-full-control"
       ]

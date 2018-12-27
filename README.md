@@ -16,3 +16,26 @@ module "terraform_state_backend" {
   input_tags = "${local.common_tags}"
 }
 ```
+
+## Example Backend Config:
+```
+terraform {
+  backend "s3" {
+    role_arn        = "arn:aws:iam::123456789012:role/123456789012-terraform-state"
+    acl             = "bucket-owner-full-control"
+    bucket          = "mycompany-remote-state-backend-anm1587s49"
+    dynamodb_table  = "mycompany-remote-state-backend"
+    encrypt         = true
+    key             = "123456789012/mycompany-account-organization-master/terraform.tfstate"
+    kms_key_id      = "arn:aws:kms:us-east-1:123456789012:key/4ryh7htp-FAKE-ARNS-DUDE-777d88512345"
+    region          = "us-east-1"
+  }
+}
+
+```
+
+## Example to Initialize the backend:
+```
+terraform init -backend-config="access_key=AKIAIOIEXAMPLEOXJA" -backend-config="secret_key=PiNMLcNOTAREALKEYGQGzz20v3"
+```
+NOTE: The access and secret keys used must have rights to assume the role created by the module
