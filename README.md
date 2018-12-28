@@ -40,4 +40,6 @@ terraform init -backend-config="access_key=AKIAIOIEXAMPLEOXJA" -backend-config="
 ```
 NOTE: The access and secret keys used must have rights to assume the role created by the module
 - This is usually automatically the case for any keys that have full admin rights in the account whose state is to be stored, or in one of the global accounts specified.
-- Otherwise, this will need to be assigned manually. A module which assigns this right is to be released soon.
+- Otherwise, this will need to be assigned manually. You can use this module to help with mapping those trusts: https://registry.terraform.io/modules/StratusGrid/iam-cross-account-trust-maps/aws
+  - Use trusting_arn to map a single trust (like for a standard account assumption policy)
+  - Use trusting_arns to map multiple trusts (like for a global account assumption policy)
