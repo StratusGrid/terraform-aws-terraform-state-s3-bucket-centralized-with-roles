@@ -10,7 +10,7 @@ output "dynamodb_table" {
 
 output "kms_key_alias_arns" {
   description = "kms key alias arns for each specific account"
-  value = "${aws_kms_alias.specific_remote_state_backend.*.arn}"
+  value = "${aws_kms_alias.specific_state_backend.*.arn}"
 }
 
 output "kms_key_arns" {
