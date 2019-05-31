@@ -15,6 +15,18 @@ module "terraform_state_backend" {
   global_account_arns = ["arn:aws:iam::123456789012:root"]
   input_tags = "${local.common_tags}"
 }
+
+output "terraform_state_kms_key_alias_arns" {
+  value = "${module.terraform_state.kms_key_alias_arns}"
+}
+
+output "terraform_state_kms_key_arns" {
+  value = "${module.terraform_state.kms_key_arns}"
+}
+
+output "terraform_state_iam_role_arns" {
+  value = "${module.terraform_state.iam_role_arns}"
+}
 ```
 
 ## Example Backend Config:
@@ -71,6 +83,7 @@ module "mycompany_organization_terraform_state_trust_maps" {
 
 ## Example config without trusting any other accounts
 In this case, you just don't specific other accounts. Then, you use the default kms key along with the dynamodb table.
+```
 module "terraform_state" {
   # source = "github.com/StratusGrid/terraform-aws-terraform-state-s3-bucket-centralized-with-roles"
   source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
@@ -82,3 +95,13 @@ module "terraform_state" {
   global_account_arns = []
   input_tags = "${local.common_tags}"
 }
+
+output "terraform_state_kms_key_alias_arn" {
+  value = "${module.terraform_state.kms_default_key_alias_arn}"
+}
+
+output "terraform_state_kms_key_arn" {
+  value = "${module.terraform_state.kms_default_key_arn}"
+}
+
+```
