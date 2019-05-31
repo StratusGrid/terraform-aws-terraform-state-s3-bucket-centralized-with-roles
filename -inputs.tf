@@ -3,6 +3,12 @@ variable "name_prefix" {
   type = "string"
 }
 
+variable "name_suffix" {
+  description = "String to append to object names. This is optional, so start with dash if using"
+  type = "string"
+  default = ""
+}
+
 variable "log_bucket_id" {
   description = "ID of logging bucket to be targeted for S3 bucket logs"
   type = "string"

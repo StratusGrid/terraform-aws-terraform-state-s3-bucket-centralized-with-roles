@@ -11,7 +11,7 @@ resource "aws_kms_key" "specific_remote_state_backend" {
 
 resource "aws_kms_alias" "specific_state_backend" {
   count = "${length(var.account_arns)}"
-  name          = "alias/${var.name_prefix}-remote-state-backend-${replace(var.account_arns[count.index], local.account_from_arn, "$5")}"
+  name          = "alias/${var.name_prefix}-remote-state-backend-${replace(var.account_arns[count.index], local.account_from_arn, "$5")}${var.name_suffix}"
   target_key_id = "${aws_kms_key.specific_remote_state_backend.*.key_id[count.index]}"
 }
 
