@@ -68,3 +68,17 @@ module "mycompany_organization_terraform_state_trust_maps" {
   input_tags = "${local.common_tags}"
 }
 ```
+
+## Example config without trusting any other accounts
+In this case, you just don't specific other accounts. Then, you use the default kms key along with the dynamodb table.
+module "terraform_state" {
+  # source = "github.com/StratusGrid/terraform-aws-terraform-state-s3-bucket-centralized-with-roles"
+  source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
+  version = "1.0.4"
+  name_prefix = "${var.name_prefix}"
+  log_bucket_id = "${module.s3_bucket_logging.bucket_id}"
+  account_arns = [
+  ]
+  global_account_arns = []
+  input_tags = "${local.common_tags}"
+}
