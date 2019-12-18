@@ -4,13 +4,13 @@ resource "aws_s3_bucket" "remote_state_backend" {
     prevent_destroy = true
   }
   logging {
-    target_bucket = "${var.log_bucket_id}"
+    target_bucket = var.log_bucket_id
     target_prefix = "s3/${var.name_prefix}-remote-state-backend${var.name_suffix}/"
   }
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        kms_master_key_id = "${aws_kms_key.remote_state_backend.arn}"
+        kms_master_key_id = aws_kms_key.remote_state_backend.arn
         sse_algorithm     = "aws:kms"
       }
     }
@@ -18,109 +18,109 @@ resource "aws_s3_bucket" "remote_state_backend" {
   versioning {
     enabled = true
   }
-  tags = "${var.input_tags}"
+  tags = var.input_tags
 }
 
 data "aws_iam_policy_document" "encrypted_transit_bucket_policy" {
   statement {
-    actions   = [
+    actions = [
       "s3:*"
     ]
     condition {
-      test      = "Bool"
-      values    = [
+      test = "Bool"
+      values = [
         "false"
       ]
-      variable  = "aws:SecureTransport"
+      variable = "aws:SecureTransport"
     }
-    effect    = "Deny"
+    effect = "Deny"
     principals {
       identifiers = [
         "*"
       ]
-      type        = "AWS"
+      type = "AWS"
     }
     resources = [
       "${aws_s3_bucket.remote_state_backend.arn}",
       "${aws_s3_bucket.remote_state_backend.arn}/*"
     ]
-    sid       = "DenyUnsecuredTransport"
+    sid = "DenyUnsecuredTransport"
   }
   statement {
-    actions   = [
+    actions = [
       "s3:PutObject"
     ]
     condition {
-      test      = "StringNotEquals"
-      values    = [
+      test = "StringNotEquals"
+      values = [
         "aws:kms"
       ]
-      variable  = "s3:x-amz-server-side-encryption"
+      variable = "s3:x-amz-server-side-encryption"
     }
-    effect    = "Deny"
+    effect = "Deny"
     principals {
       identifiers = [
         "*"
       ]
-      type        = "AWS"
+      type = "AWS"
     }
     resources = [
       "${aws_s3_bucket.remote_state_backend.arn}",
       "${aws_s3_bucket.remote_state_backend.arn}/*"
     ]
-    sid       = "DenyIncorrectEncryptionHeader"
+    sid = "DenyIncorrectEncryptionHeader"
   }
   statement {
-    actions   = [
+    actions = [
       "s3:PutObject"
     ]
     condition {
-      test      = "Null"
-      values    = [
+      test = "Null"
+      values = [
         "true"
       ]
-      variable  = "s3:x-amz-server-side-encryption"
+      variable = "s3:x-amz-server-side-encryption"
     }
-    effect    = "Deny"
+    effect = "Deny"
     principals {
       identifiers = [
         "*"
       ]
-      type        = "AWS"
+      type = "AWS"
     }
     resources = [
       "${aws_s3_bucket.remote_state_backend.arn}",
       "${aws_s3_bucket.remote_state_backend.arn}/*"
     ]
-    sid       = "DenyUnencryptedObjectUploads"
+    sid = "DenyUnencryptedObjectUploads"
   }
   statement {
-    actions   = [
+    actions = [
       "s3:PutObject"
     ]
     condition {
-      test      = "StringNotEquals"
-      values    = [
+      test = "StringNotEquals"
+      values = [
         "bucket-owner-full-control"
       ]
-      variable  = "s3:x-amz-acl"
+      variable = "s3:x-amz-acl"
     }
-    effect    = "Deny"
+    effect = "Deny"
     principals {
       identifiers = [
         "*"
       ]
-      type        = "AWS"
+      type = "AWS"
     }
     resources = [
       "${aws_s3_bucket.remote_state_backend.arn}",
       "${aws_s3_bucket.remote_state_backend.arn}/*"
     ]
-    sid       = "RequireBucketOwnerACL"
+    sid = "RequireBucketOwnerACL"
   }
 }
 
 resource "aws_s3_bucket_policy" "remote_state_backend" {
-  bucket = "${aws_s3_bucket.remote_state_backend.id}"
-  policy = "${data.aws_iam_policy_document.encrypted_transit_bucket_policy.json}"
+  bucket = aws_s3_bucket.remote_state_backend.id
+  policy = data.aws_iam_policy_document.encrypted_transit_bucket_policy.json
 }
