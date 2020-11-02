@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "account_specific_policy" {
       "s3:ListBucketMultipartUploads"
     ]
     resources = [
-      "${aws_s3_bucket.remote_state_backend.arn}"
+      aws_s3_bucket.remote_state_backend.arn
     ]
     sid = "AllowAccessToRemoteStateBackendBucket"
   }
@@ -50,7 +50,7 @@ data "aws_iam_policy_document" "account_specific_policy" {
       "kms:ReEncrypt*"
     ]
     resources = [
-      "${aws_kms_key.specific_remote_state_backend.*.arn[count.index]}"
+      aws_kms_key.specific_remote_state_backend.*.arn[count.index]
     ]
     sid = "AllowUseOfRemoteStateBackendKMSKey"
   }
@@ -66,7 +66,7 @@ data "aws_iam_policy_document" "account_specific_policy" {
       "dynamodb:UpdateItem"
     ]
     resources = [
-      "${aws_dynamodb_table.remote_state_backend.arn}"
+      aws_dynamodb_table.remote_state_backend.arn
     ]
     sid = "AllowAccessToLockTable"
   }
@@ -87,7 +87,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
 
     principals {
       type        = "AWS"
-      identifiers = flatten(["${var.account_arns[count.index]}", "${var.global_account_arns}"])
+      identifiers = flatten([var.account_arns[count.index], var.global_account_arns])
     }
 
     actions = ["sts:AssumeRole"]

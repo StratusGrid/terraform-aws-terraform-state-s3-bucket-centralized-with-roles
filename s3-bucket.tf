@@ -41,7 +41,7 @@ data "aws_iam_policy_document" "encrypted_transit_bucket_policy" {
       type = "AWS"
     }
     resources = [
-      "${aws_s3_bucket.remote_state_backend.arn}",
+      aws_s3_bucket.remote_state_backend.arn,
       "${aws_s3_bucket.remote_state_backend.arn}/*"
     ]
     sid = "DenyUnsecuredTransport"
@@ -65,7 +65,7 @@ data "aws_iam_policy_document" "encrypted_transit_bucket_policy" {
       type = "AWS"
     }
     resources = [
-      "${aws_s3_bucket.remote_state_backend.arn}",
+      aws_s3_bucket.remote_state_backend.arn,
       "${aws_s3_bucket.remote_state_backend.arn}/*"
     ]
     sid = "DenyIncorrectEncryptionHeader"
@@ -89,7 +89,7 @@ data "aws_iam_policy_document" "encrypted_transit_bucket_policy" {
       type = "AWS"
     }
     resources = [
-      "${aws_s3_bucket.remote_state_backend.arn}",
+      aws_s3_bucket.remote_state_backend.arn,
       "${aws_s3_bucket.remote_state_backend.arn}/*"
     ]
     sid = "DenyUnencryptedObjectUploads"
@@ -113,7 +113,7 @@ data "aws_iam_policy_document" "encrypted_transit_bucket_policy" {
       type = "AWS"
     }
     resources = [
-      "${aws_s3_bucket.remote_state_backend.arn}",
+      aws_s3_bucket.remote_state_backend.arn,
       "${aws_s3_bucket.remote_state_backend.arn}/*"
     ]
     sid = "RequireBucketOwnerACL"
