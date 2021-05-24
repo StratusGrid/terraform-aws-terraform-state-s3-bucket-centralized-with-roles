@@ -8,5 +8,5 @@ resource "aws_dynamodb_table" "remote_state_backend" {
 
   hash_key = "LockID"
   name     = "${var.name_prefix}-remote-state-backend${var.name_suffix}"
-  tags     = var.input_tags
+  tags     = local.common_tags
 }

@@ -6,7 +6,7 @@ resource "aws_kms_key" "specific_remote_state_backend" {
   count               = length(var.account_arns)
   description         = "Key for ${replace(var.account_arns[count.index], local.account_from_arn, "$5")} remote state backend"
   enable_key_rotation = true
-  tags                = var.input_tags
+  tags                = local.common_tags
 }
 
 resource "aws_kms_alias" "specific_state_backend" {
