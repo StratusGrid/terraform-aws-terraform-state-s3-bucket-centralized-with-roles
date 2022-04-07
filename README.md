@@ -2,6 +2,12 @@ This is intended to be used by an organization for all of their own accounts. Th
 
 This restriction is put in place by creating a unique role for each account, then attaching an assumerole policy that trusts the corresponding account to assume it. You will still need to give permission to assume roles to your users/roles that are used to apply terraform in other accounts, and configure your state appropriately to use this.
 
+As of v3.0, all public access is blocked by default.  There are individual parameters which can be set to "false" if public bucket/state access is desired:
+* block_public_acls
+* block_public_policy
+* ignore_public_acls
+* restrict_public_buckets
+
 ## Example Config:
 ```
 module "terraform_state_backend" {
@@ -109,3 +115,4 @@ output "terraform_state_kms_key_arn" {
 }
 
 ```
+
