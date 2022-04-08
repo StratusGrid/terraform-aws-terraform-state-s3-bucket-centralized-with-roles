@@ -7,3 +7,6 @@
 
 # .tfvars files
 *.tfvars
+
+# temporary IDE files
+**/.idea/*

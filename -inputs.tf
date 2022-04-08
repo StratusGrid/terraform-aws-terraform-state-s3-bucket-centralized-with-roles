@@ -45,13 +45,13 @@ variable "block_public_policy" {
 }
 
 variable "ignore_public_acls" {
-  description = "Whether Amazon S3 should ignore public ACLs for this bucket."
+  description = "Whether Amazon S3 should ignore public ACLs for this bucket. Causes Amazon S3 to ignore public ACLs on this bucket and any objects that it contains."
   type        = bool
   default     = true
 }
 
 variable "restrict_public_buckets" {
-  description = "Whether Amazon S3 should restrict public bucket policies for this bucket."
+  description = "Whether Amazon S3 should restrict public bucket policies for this bucket. Enabling this setting does not affect the previously stored bucket policy, except that public and cross-account access within the public bucket policy, including non-public delegation to specific accounts, is blocked."
   type        = bool
   default     = true
 }

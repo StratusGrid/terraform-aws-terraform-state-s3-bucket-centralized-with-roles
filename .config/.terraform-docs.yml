@@ -1,0 +1,90 @@
+version: ""
+
+formatter: markdown table
+
+name: terraform-aws-terraform-state-s3-bucket-centralized-with-roles
+
+content: |-
+  # terraform-state-s3-bucket-centralized-with-roles
+
+  This is intended to be used by an organization for all of their own accounts. This does not protect access to DynamoDB locking of other accounts, it only restricts access S3 paths for each account.
+  
+  This restriction is put in place by creating a unique role for each account, then attaching an assumerole policy that trusts the corresponding account to assume it. You will still need to give permission to assume roles to your users/roles that are used to apply terraform in other accounts, and configure your state appropriately to use this.
+  
+  As of v3.0, all public access is blocked by default.  There are individual parameters which can be set to "false" if public bucket/state access is desired:
+  * block_public_acls
+  * block_public_policy
+  * ignore_public_acls
+  * restrict_public_buckets
+  
+  ## Example Config:
+
+  ```hcl
+  {{ include "examples/with_trusted_accounts.tf" }}
+  ```
+  
+  ## Example Backend Config:
+
+  ```hcl
+  {{ include "examples/backend_config.tf" }}
+  ```
+
+  ## Example to Initialize the backend:
+  ```
+  terraform init -backend-config="access_key=AKIAIOIEXAMPLEOXJA" -backend-config="secret_key=PiNMLcNOTAREALKEYGQGzz20v3"
+  ```
+
+  NOTE: The access and secret keys used must have rights to assume the role created by the module
+  - This is usually automatically the case for any keys that have full admin rights in the account whose state is to be stored, or in one of the global accounts specified.
+  - Otherwise, this will need to be assigned manually. You can use this module to help with mapping those trusts: https://registry.terraform.io/modules/StratusGrid/iam-cross-account-trust-maps/aws
+    - Use trusting_arn to map a single trust (like for a standard account assumption policy)
+    - Use trusting_arns to map multiple trusts (like for a global account assumption policy)
+  
+  ## Example Configuration on Global Users Account:
+
+  ```hcl
+  {{ include "examples/global_users.tf" }}
+  ```
+  
+  ## Example config without trusting any other accounts
+  In this case, you just don't specific other accounts. Then, you use the default kms key along with the dynamodb table.
+
+  ```hcl
+  {{ include "examples/no_trusted_accounts.tf" }}
+  ```
+
+  ---
+
+  {{ .Resources }}
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}
+
+  ---
+
+  ## Contributors
+  - Chris Hurst [GenesisChris](https://github.com/GenesisChris)
+  - Ivan Casco [ivancasco-sg](https://github.com/ivancasco-sg)
+  - Jason Drouhard [jason-drouhard](https://github.com/jason-drouhard)
+  - Matt Barlow [mattbarlow-sg](https://github.com/mattbarlow-sg)
+  - Chris Childress [chrischildresssg](https://github.com/chrischildresssg)
+
+  Note, manual changes to the README will be overwritten when the documentation is updated. To update the documentation, run `terraform-docs -c .config/.terraform-docs.yml .`
+
+sections:
+  show:
+    - resources
+    - inputs
+    - outputs
+
+sort:
+  enabled: true
+  by: name
+
+settings:
+  color: true
+
+output:
+  file: README.md
+  mode: replace
