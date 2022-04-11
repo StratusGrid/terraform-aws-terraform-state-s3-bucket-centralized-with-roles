@@ -9,7 +9,7 @@
   # When require_mfa is set to true, terraform init and terraform apply would need to be run with your STS acquired temporary token
   module "mycompany_organization_terraform_state_trust_maps" {
     source = "StratusGrid/iam-role-cross-account-trusting/aws"
-    version = "1.1.0"
+    version = "~> 1.1"
     trusting_role_arns = "${local.mycompany_organization_terraform_state_account_roles}"
     trusted_policy_name = "mycompany-organization-terraform-states"
     trusted_group_names = [
