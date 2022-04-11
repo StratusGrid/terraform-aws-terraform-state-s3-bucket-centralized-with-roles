@@ -14,49 +14,49 @@ As of v3.0, all public access is blocked by default.  There are individual param
 ## Example Config:
 
 ```hcl
-  module "terraform_state_backend" {
-    source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
-    version = "~> 3.0"
+module "terraform_state_backend" {
+  source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
+  version = "~> 3.0"
 
-    name_prefix = "mycompany"
-    log_bucket_id = "${module.s3_bucket_logging.bucket_id}"
-    account_arns = [
-      "arn:aws:iam::123456789012:root",
-      "arn:aws:iam::098765432109:root"
-    ]
-    global_account_arns = ["arn:aws:iam::123456789012:root"]
-    input_tags = "${local.common_tags}"
-  }
-  
-  output "terraform_state_kms_key_alias_arns" {
-    value = "${module.terraform_state.kms_key_alias_arns}"
-  }
-  
-  output "terraform_state_kms_key_arns" {
-    value = "${module.terraform_state.kms_key_arns}"
-  }
-  
-  output "terraform_state_iam_role_arns" {
-    value = "${module.terraform_state.iam_role_arns}"
-  }
+  name_prefix   = "mycompany"
+  log_bucket_id = module.s3_bucket_logging.bucket_id
+  account_arns = [
+    "arn:aws:iam::123456789012:root",
+    "arn:aws:iam::098765432109:root"
+  ]
+  global_account_arns = ["arn:aws:iam::123456789012:root"]
+  input_tags          = local.common_tags
+}
+
+output "terraform_state_kms_key_alias_arns" {
+  value = module.terraform_state.kms_key_alias_arns
+}
+
+output "terraform_state_kms_key_arns" {
+  value = module.terraform_state.kms_key_arns
+}
+
+output "terraform_state_iam_role_arns" {
+  value = module.terraform_state.iam_role_arns
+}
 
 ```
 
 ## Example Backend Config:
 
 ```hcl
-  terraform {
-    backend "s3" {
-      role_arn        = "arn:aws:iam::123456789012:role/123456789012-terraform-state"
-      acl             = "bucket-owner-full-control"
-      bucket          = "mycompany-remote-state-backend-anm1587s49"
-      dynamodb_table  = "mycompany-remote-state-backend"
-      encrypt         = true
-      key             = "123456789012/mycompany-account-organization-master/terraform.tfstate"
-      kms_key_id      = "arn:aws:kms:us-east-1:123456789012:key/4ryh7htp-FAKE-ARNS-DUDE-777d88512345"
-      region          = "us-east-1"
-    }
+terraform {
+  backend "s3" {
+    role_arn       = "arn:aws:iam::123456789012:role/123456789012-terraform-state"
+    acl            = "bucket-owner-full-control"
+    bucket         = "mycompany-remote-state-backend-anm1587s49"
+    dynamodb_table = "mycompany-remote-state-backend"
+    encrypt        = true
+    key            = "123456789012/mycompany-account-organization-master/terraform.tfstate"
+    kms_key_id     = "arn:aws:kms:us-east-1:123456789012:key/4ryh7htp-FAKE-ARNS-DUDE-777d88512345"
+    region         = "us-east-1"
   }
+}
 
 ```
 
@@ -74,27 +74,27 @@ NOTE: The access and secret keys used must have rights to assume the role create
 ## Example Configuration on Global Users Account:
 
 ```hcl
-  # This should have each terraform state role if you want a user to be able to apply terraform manually
-  locals {
-    mycompany_organization_terraform_state_account_roles = [
-      "arn:aws:iam::123456789012:role/210987654321-terraform-state",
-      "arn:aws:iam::123456789012:role/123456789012-terraform-state"
-    ]
-  }
-  
-  # When require_mfa is set to true, terraform init and terraform apply would need to be run with your STS acquired temporary token
-  module "mycompany_organization_terraform_state_trust_maps" {
-    source = "StratusGrid/iam-role-cross-account-trusting/aws"
-    version = "~> 1.1"
-    trusting_role_arns = "${local.mycompany_organization_terraform_state_account_roles}"
-    trusted_policy_name = "mycompany-organization-terraform-states"
-    trusted_group_names = [
-      "${aws_iam_group.mycompany_internal_admins.name}"
-    ]
-    trusted_role_names = []
-    require_mfa = false
-    input_tags = "${local.common_tags}"
-  }
+# This should have each terraform state role if you want a user to be able to apply terraform manually
+locals {
+  mycompany_organization_terraform_state_account_roles = [
+    "arn:aws:iam::123456789012:role/210987654321-terraform-state",
+    "arn:aws:iam::123456789012:role/123456789012-terraform-state"
+  ]
+}
+
+# When require_mfa is set to true, terraform init and terraform apply would need to be run with your STS acquired temporary token
+module "mycompany_organization_terraform_state_trust_maps" {
+  source              = "StratusGrid/iam-role-cross-account-trusting/aws"
+  version             = "~> 1.1"
+  trusting_role_arns  = local.mycompany_organization_terraform_state_account_roles
+  trusted_policy_name = "mycompany-organization-terraform-states"
+  trusted_group_names = [
+    "${aws_iam_group.mycompany_internal_admins.name}"
+  ]
+  trusted_role_names = []
+  require_mfa        = false
+  input_tags         = local.common_tags
+}
 
 ```
 
@@ -102,26 +102,26 @@ NOTE: The access and secret keys used must have rights to assume the role create
 In this case, you just don't specific other accounts. Then, you use the default kms key along with the dynamodb table.
 
 ```hcl
-  module "terraform_state" {
-    source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
-    version = "~> 3.0"
+module "terraform_state" {
+  source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
+  version = "~> 3.0"
 
-    name_prefix   = var.name_prefix
-    name_suffix   = local.name_suffix
-    log_bucket_id = module.s3_bucket_logging.bucket_id
-    account_arns = [
-    ]
-    global_account_arns = []
-    input_tags          = merge(local.common_tags, {})
-  }
-  
-  output "terraform_state_kms_key_alias_arn" {
-    value = "${module.terraform_state.kms_default_key_alias_arn}"
-  }
-  
-  output "terraform_state_kms_key_arn" {
-    value = "${module.terraform_state.kms_default_key_arn}"
-  }
+  name_prefix   = var.name_prefix
+  name_suffix   = local.name_suffix
+  log_bucket_id = module.s3_bucket_logging.bucket_id
+  account_arns = [
+  ]
+  global_account_arns = []
+  input_tags          = merge(local.common_tags, {})
+}
+
+output "terraform_state_kms_key_alias_arn" {
+  value = module.terraform_state.kms_default_key_alias_arn
+}
+
+output "terraform_state_kms_key_arn" {
+  value = module.terraform_state.kms_default_key_arn
+}
 
 ```
 
