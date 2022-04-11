@@ -16,8 +16,8 @@ As of v3.0, all public access is blocked by default.  There are individual param
 ```hcl
   module "terraform_state_backend" {
     source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
-    version = "2.0.0"
-    # source  = "github.com/StratusGrid/terraform-aws-terraform-state-s3-bucket-centralized-with-roles"
+    version = "~> 3.0"
+
     name_prefix = "mycompany"
     log_bucket_id = "${module.s3_bucket_logging.bucket_id}"
     account_arns = [
@@ -62,7 +62,7 @@ As of v3.0, all public access is blocked by default.  There are individual param
 
 ## Example to Initialize the backend:
 ```
-terraform init -backend-config="access_key=AKIAIOIEXAMPLEOXJA" -backend-config="secret_key=PiNMLcNOTAREALKEYGQGzz20v3"
+terraform init -backend-config="access_key=ABCDEFGHIJKLMNOPQR" -backend-config="secret_key=AbcDeFgHIJKlmnOPqRStUVwxyZ"
 ```
 
 NOTE: The access and secret keys used must have rights to assume the role created by the module
@@ -85,7 +85,7 @@ NOTE: The access and secret keys used must have rights to assume the role create
   # When require_mfa is set to true, terraform init and terraform apply would need to be run with your STS acquired temporary token
   module "mycompany_organization_terraform_state_trust_maps" {
     source = "StratusGrid/iam-role-cross-account-trusting/aws"
-    version = "1.1.0"
+    version = "~> 1.1"
     trusting_role_arns = "${local.mycompany_organization_terraform_state_account_roles}"
     trusted_policy_name = "mycompany-organization-terraform-states"
     trusted_group_names = [
@@ -104,9 +104,8 @@ In this case, you just don't specific other accounts. Then, you use the default 
 ```hcl
   module "terraform_state" {
     source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
-    version = "2.0.0"
-    # source  = "github.com/StratusGrid/terraform-aws-terraform-state-s3-bucket-centralized-with-roles"
-    
+    version = "~> 3.0"
+
     name_prefix   = var.name_prefix
     name_suffix   = local.name_suffix
     log_bucket_id = module.s3_bucket_logging.bucket_id

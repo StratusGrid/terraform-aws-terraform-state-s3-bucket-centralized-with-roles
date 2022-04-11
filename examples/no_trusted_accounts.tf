@@ -1,8 +1,7 @@
   module "terraform_state" {
     source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
-    version = "2.0.0"
-    # source  = "github.com/StratusGrid/terraform-aws-terraform-state-s3-bucket-centralized-with-roles"
-    
+    version = "~> 3.0"
+
     name_prefix   = var.name_prefix
     name_suffix   = local.name_suffix
     log_bucket_id = module.s3_bucket_logging.bucket_id
