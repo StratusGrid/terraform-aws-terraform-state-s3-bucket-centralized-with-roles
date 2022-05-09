@@ -16,7 +16,7 @@ As of v3.0, all public access is blocked by default.  There are individual param
 ```hcl
 module "terraform_state_backend" {
   source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
   name_prefix   = "mycompany"
   log_bucket_id = module.s3_bucket_logging.bucket_id
@@ -104,7 +104,7 @@ In this case, you just don't specific other accounts. Then, you use the default 
 ```hcl
 module "terraform_state" {
   source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
   name_prefix   = var.name_prefix
   name_suffix   = local.name_suffix

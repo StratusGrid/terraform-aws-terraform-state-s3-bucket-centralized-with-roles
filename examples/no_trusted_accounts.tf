@@ -1,6 +1,6 @@
 module "terraform_state" {
   source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
   name_prefix   = var.name_prefix
   name_suffix   = local.name_suffix
