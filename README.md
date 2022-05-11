@@ -16,7 +16,7 @@ As of v3.0, all public access is blocked by default.  There are individual param
 ```hcl
 module "terraform_state_backend" {
   source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
   name_prefix   = "mycompany"
   log_bucket_id = module.s3_bucket_logging.bucket_id
@@ -104,7 +104,7 @@ In this case, you just don't specific other accounts. Then, you use the default 
 ```hcl
 module "terraform_state" {
   source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
-  version = "~> 3.0"
+  version = "~> 4.0"
 
   name_prefix   = var.name_prefix
   name_suffix   = local.name_suffix
@@ -140,8 +140,11 @@ output "terraform_state_kms_key_arn" {
 | [aws_kms_key.remote_state_backend](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
 | [aws_kms_key.specific_remote_state_backend](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
 | [aws_s3_bucket.remote_state_backend](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_logging.remote_state_backend](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_logging) | resource |
 | [aws_s3_bucket_policy.remote_state_backend](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_public_access_block.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
+| [aws_s3_bucket_server_side_encryption_configuration.remote_state_backend](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
+| [aws_s3_bucket_versioning.remote_state_backend](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning) | resource |
 
 ## Inputs
 
