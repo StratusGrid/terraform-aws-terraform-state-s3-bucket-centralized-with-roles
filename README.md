@@ -1,6 +1,8 @@
 <!-- BEGIN_TF_DOCS -->
 # terraform-state-s3-bucket-centralized-with-roles
 
+GitHub: [StratusGrid/terraform-state-s3-bucket-centralized-with-roles](https://github.com/StratusGrid/terraform-state-s3-bucket-centralized-with-roles)
+
 This is intended to be used by an organization for all of their own accounts. This does not protect access to DynamoDB locking of other accounts, it only restricts access S3 paths for each account.
 
 This restriction is put in place by creating a unique role for each account, then attaching an assumerole policy that trusts the corresponding account to assume it. You will still need to give permission to assume roles to your users/roles that are used to apply terraform in other accounts, and configure your state appropriately to use this.
@@ -16,7 +18,7 @@ As of v3.0, all public access is blocked by default.  There are individual param
 ```hcl
 module "terraform_state_backend" {
   source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
-  version = "~> 4.0"
+  version = "~> 4.1"
 
   name_prefix   = "mycompany"
   log_bucket_id = module.s3_bucket_logging.bucket_id
@@ -39,7 +41,6 @@ output "terraform_state_kms_key_arns" {
 output "terraform_state_iam_role_arns" {
   value = module.terraform_state.iam_role_arns
 }
-
 ```
 
 ## Example Backend Config:
@@ -85,7 +86,7 @@ locals {
 # When require_mfa is set to true, terraform init and terraform apply would need to be run with your STS acquired temporary token
 module "mycompany_organization_terraform_state_trust_maps" {
   source              = "StratusGrid/iam-role-cross-account-trusting/aws"
-  version             = "~> 1.1"
+  version             = "~> 2.1"
   trusting_role_arns  = local.mycompany_organization_terraform_state_account_roles
   trusted_policy_name = "mycompany-organization-terraform-states"
   trusted_group_names = [
@@ -95,7 +96,6 @@ module "mycompany_organization_terraform_state_trust_maps" {
   require_mfa        = false
   input_tags         = local.common_tags
 }
-
 ```
 
 ## Example config without trusting any other accounts
@@ -104,7 +104,7 @@ In this case, you just don't specific other accounts. Then, you use the default 
 ```hcl
 module "terraform_state" {
   source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
-  version = "~> 4.0"
+  version = "~> 4.1"
 
   name_prefix   = var.name_prefix
   name_suffix   = local.name_suffix
@@ -122,7 +122,6 @@ output "terraform_state_kms_key_alias_arn" {
 output "terraform_state_kms_key_arn" {
   value = module.terraform_state.kms_default_key_arn
 }
-
 ```
 
 ---
@@ -182,5 +181,5 @@ output "terraform_state_kms_key_arn" {
 - Matt Barlow [mattbarlow-sg](https://github.com/mattbarlow-sg)
 - Chris Childress [chrischildresssg](https://github.com/chrischildresssg)
 
-Note, manual changes to the README will be overwritten when the documentation is updated. To update the documentation, run `terraform-docs -c .config/.terraform-docs.yml .`
+<span style="color:red">Note:</span> Manual changes to the README will be overwritten when the documentation is updated. To update the documentation, run `terraform-docs -c .config/.terraform-docs.yml .`
 <!-- END_TF_DOCS -->

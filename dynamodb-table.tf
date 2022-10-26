@@ -8,5 +8,15 @@ resource "aws_dynamodb_table" "remote_state_backend" {
 
   hash_key = "LockID"
   name     = "${var.name_prefix}-remote-state-backend${var.name_suffix}"
-  tags     = local.common_tags
+
+  point_in_time_recovery {
+    enabled = true
+  }
+
+  server_side_encryption {
+    enabled     = true
+    kms_key_arn = aws_kms_key.remote_state_backend.key_id
+  }
+
+  tags = local.common_tags
 }

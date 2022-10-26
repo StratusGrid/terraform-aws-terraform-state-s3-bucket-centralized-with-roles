@@ -1,6 +1,6 @@
 module "terraform_state_backend" {
   source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
-  version = "~> 4.0"
+  version = "~> 4.1"
 
   name_prefix   = "mycompany"
   log_bucket_id = module.s3_bucket_logging.bucket_id
@@ -23,4 +23,3 @@ output "terraform_state_kms_key_arns" {
 output "terraform_state_iam_role_arns" {
   value = module.terraform_state.iam_role_arns
 }
-
