@@ -15,7 +15,7 @@ resource "aws_dynamodb_table" "remote_state_backend" {
 
   server_side_encryption {
     enabled     = true
-    kms_key_arn = aws_kms_key.remote_state_backend.key_id
+    kms_key_arn = aws_kms_key.remote_state_backend.arn
   }
 
   tags = local.common_tags
