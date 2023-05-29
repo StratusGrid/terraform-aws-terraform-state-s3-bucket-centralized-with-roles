@@ -10,8 +10,8 @@ resource "aws_kms_key" "specific_remote_state_backend" {
 }
 
 resource "aws_kms_alias" "specific_state_backend" {
-  count         = length(var.account_arns)
-  name          = "alias/${var.name_prefix}-remote-state-backend-${replace(var.account_arns[count.index], local.account_from_arn, "$5")}${var.name_suffix}"
+  count = length(var.account_arns)
+  name  = "alias/${var.name_prefix}-remote-state-backend-${replace(var.account_arns[count.index], local.account_from_arn, "$5")}${var.name_suffix}"
   # tflint-ignore: terraform_deprecated_index ignored because terraform will threat it as list
   target_key_id = aws_kms_key.specific_remote_state_backend.*.key_id[count.index]
 }
@@ -75,12 +75,12 @@ data "aws_iam_policy_document" "account_specific_policy" {
 }
 
 resource "aws_iam_policy" "account_state_policy" {
-  count       = length(var.account_arns)
-  name        = "${replace(var.account_arns[count.index], local.account_from_arn, "$5")}-terraform-state-assumed-policy"
+  count = length(var.account_arns)
+  name  = "${replace(var.account_arns[count.index], local.account_from_arn, "$5")}-terraform-state-assumed-policy"
   # tflint-ignore: terraform_deprecated_index ignored because terraform will threat it as list
   description = "Policy given upon role assumption of ${replace(var.account_arns[count.index], local.account_from_arn, "$5")}-terraform-state role"
   # tflint-ignore: terraform_deprecated_index ignored because terraform will threat it as list
-  policy      = data.aws_iam_policy_document.account_specific_policy.*.json[count.index]
+  policy = data.aws_iam_policy_document.account_specific_policy.*.json[count.index]
 }
 
 data "aws_iam_policy_document" "assume_role_policy" {
@@ -100,16 +100,16 @@ data "aws_iam_policy_document" "assume_role_policy" {
 }
 
 resource "aws_iam_role" "account_state_role" {
-  count              = length(var.account_arns)
-  name               = "${replace(var.account_arns[count.index], local.account_from_arn, "$5")}-terraform-state"
+  count = length(var.account_arns)
+  name  = "${replace(var.account_arns[count.index], local.account_from_arn, "$5")}-terraform-state"
   # tflint-ignore: terraform_deprecated_index ignored because terraform will threat it as list
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.*.json[count.index]
 }
 
 resource "aws_iam_role_policy_attachment" "account_state_role" {
-  count      = length(var.account_arns)
+  count = length(var.account_arns)
   # tflint-ignore: terraform_deprecated_index ignored because terraform will threat it as list
-  role       = aws_iam_role.account_state_role.*.name[count.index]
+  role = aws_iam_role.account_state_role.*.name[count.index]
   # tflint-ignore: terraform_deprecated_index ignored because terraform will threat it as list
   policy_arn = aws_iam_policy.account_state_policy.*.arn[count.index]
 }
