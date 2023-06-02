@@ -80,7 +80,7 @@ resource "aws_iam_policy" "account_state_policy" {
   # tflint-ignore: terraform_deprecated_index ignored because terraform will threat it as list
   description = "Policy given upon role assumption of ${replace(var.account_arns[count.index], local.account_from_arn, "$5")}-terraform-state role"
   # tflint-ignore: terraform_deprecated_index ignored because terraform will threat it as list
-  policy = data.aws_iam_policy_document.account_specific_policy.*.json[count.index]
+  policy = data.aws_iam_policy_document.account_specific_policy[*].json[count.index]
 }
 
 data "aws_iam_policy_document" "assume_role_policy" {
