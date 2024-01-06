@@ -14,6 +14,12 @@ variable "log_bucket_id" {
   type        = string
 }
 
+variable "log_bucket_target_object_key_format" {
+  description = "Map containing logging bucket target object key format configuration."
+  type        = any
+  default     = {}
+}
+
 variable "account_arns" {
   description = "Arns for accounts / roles in accounts which are given a role they are able to assume to access their state."
   type        = list(string)

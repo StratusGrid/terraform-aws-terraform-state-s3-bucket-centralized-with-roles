@@ -69,8 +69,8 @@ terraform init -backend-config="access_key=ABCDEFGHIJKLMNOPQR" -backend-config="
 NOTE: The access and secret keys used must have rights to assume the role created by the module
 - This is usually automatically the case for any keys that have full admin rights in the account whose state is to be stored, or in one of the global accounts specified.
 - Otherwise, this will need to be assigned manually. You can use this module to help with mapping those trusts: https://registry.terraform.io/modules/StratusGrid/iam-cross-account-trust-maps/aws
-- Use trusting_arn to map a single trust (like for a standard account assumption policy)
-- Use trusting_arns to map multiple trusts (like for a global account assumption policy)
+  - Use trusting_arn to map a single trust (like for a standard account assumption policy)
+  - Use trusting_arns to map multiple trusts (like for a global account assumption policy)
 
 ## Example Configuration on Global Users Account:
 
@@ -109,6 +109,11 @@ module "terraform_state" {
   name_prefix   = var.name_prefix
   name_suffix   = local.name_suffix
   log_bucket_id = module.s3_bucket_logging.bucket_id
+  log_bucket_target_object_key_format = {
+    partitioned_prefix = {
+      partition_date_source = "EventTime"
+    }
+  }
   account_arns = [
   ]
   global_account_arns = []
@@ -156,6 +161,7 @@ output "terraform_state_kms_key_arn" {
 | <a name="input_ignore_public_acls"></a> [ignore\_public\_acls](#input\_ignore\_public\_acls) | Whether Amazon S3 should ignore public ACLs for this bucket. Causes Amazon S3 to ignore public ACLs on this bucket and any objects that it contains. | `bool` | `true` | no |
 | <a name="input_input_tags"></a> [input\_tags](#input\_input\_tags) | Map of tags to apply to resources | `map(string)` | `{}` | no |
 | <a name="input_log_bucket_id"></a> [log\_bucket\_id](#input\_log\_bucket\_id) | ID of logging bucket to be targeted for S3 bucket logs | `string` | n/a | yes |
+| <a name="input_log_bucket_target_object_key_format"></a> [log\_bucket\_target\_object\_key\_format](#input\_log\_bucket\_target\_object\_key\_format) | Map containing logging bucket target object key format configuration. | `any` | `{}` | no |
 | <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | String to use as prefix on object names | `string` | n/a | yes |
 | <a name="input_name_suffix"></a> [name\_suffix](#input\_name\_suffix) | String to append to object names. This is optional, so start with dash if using | `string` | `""` | no |
 | <a name="input_restrict_public_buckets"></a> [restrict\_public\_buckets](#input\_restrict\_public\_buckets) | Whether Amazon S3 should restrict public bucket policies for this bucket. Enabling this setting does not affect the previously stored bucket policy, except that public and cross-account access within the public bucket policy, including non-public delegation to specific accounts, is blocked. | `bool` | `true` | no |
