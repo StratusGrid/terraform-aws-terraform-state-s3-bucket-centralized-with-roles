@@ -109,6 +109,7 @@ module "terraform_state" {
   name_prefix   = var.name_prefix
   name_suffix   = local.name_suffix
   log_bucket_id = module.s3_bucket_logging.bucket_id
+  log_bucket_target_prefix = "s3/"
   account_arns = [
   ]
   global_account_arns = []
