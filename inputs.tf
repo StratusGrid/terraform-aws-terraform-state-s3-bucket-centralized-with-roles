@@ -18,6 +18,7 @@ variable "log_bucket_target_object_key_format" {
   description = "Map containing logging bucket target object key format configuration."
   type        = any
   default     = {}
+}
 
 variable "log_bucket_target_prefix" {
   description = "The prefix for all log object keys. Define this varible to override the default."
