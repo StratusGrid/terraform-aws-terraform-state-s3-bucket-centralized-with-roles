@@ -109,6 +109,7 @@ module "terraform_state" {
   name_prefix   = var.name_prefix
   name_suffix   = local.name_suffix
   log_bucket_id = module.s3_bucket_logging.bucket_id
+  log_bucket_target_prefix = "s3/"
   account_arns = [
   ]
   global_account_arns = []
@@ -156,6 +157,7 @@ output "terraform_state_kms_key_arn" {
 | <a name="input_ignore_public_acls"></a> [ignore\_public\_acls](#input\_ignore\_public\_acls) | Whether Amazon S3 should ignore public ACLs for this bucket. Causes Amazon S3 to ignore public ACLs on this bucket and any objects that it contains. | `bool` | `true` | no |
 | <a name="input_input_tags"></a> [input\_tags](#input\_input\_tags) | Map of tags to apply to resources | `map(string)` | `{}` | no |
 | <a name="input_log_bucket_id"></a> [log\_bucket\_id](#input\_log\_bucket\_id) | ID of logging bucket to be targeted for S3 bucket logs | `string` | n/a | yes |
+| <a name="input_log_bucket_target_prefix"></a> [log\_bucket\_target\_prefix](#input\_log\_bucket\_target\_prefix) | The prefix for all log object keys. Define this varible to override the default. | `string` | `""` | no |
 | <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | String to use as prefix on object names | `string` | n/a | yes |
 | <a name="input_name_suffix"></a> [name\_suffix](#input\_name\_suffix) | String to append to object names. This is optional, so start with dash if using | `string` | `""` | no |
 | <a name="input_restrict_public_buckets"></a> [restrict\_public\_buckets](#input\_restrict\_public\_buckets) | Whether Amazon S3 should restrict public bucket policies for this bucket. Enabling this setting does not affect the previously stored bucket policy, except that public and cross-account access within the public bucket policy, including non-public delegation to specific accounts, is blocked. | `bool` | `true` | no |
