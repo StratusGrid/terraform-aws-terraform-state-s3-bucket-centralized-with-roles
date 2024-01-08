@@ -1,3 +1,7 @@
+locals {
+  log_bucket_target_prefix = length(var.log_bucket_target_prefix) > 0 ? var.log_bucket_target_prefix : "s3/${var.name_prefix}-remote-state-backend${var.name_suffix}/"
+}
+
 resource "aws_s3_bucket" "remote_state_backend" {
   bucket = "${var.name_prefix}-remote-state-backend${var.name_suffix}"
   lifecycle {
@@ -11,7 +15,7 @@ resource "aws_s3_bucket_logging" "remote_state_backend" {
   bucket = aws_s3_bucket.remote_state_backend.id
 
   target_bucket = var.log_bucket_id
-  target_prefix = "s3/${var.name_prefix}-remote-state-backend${var.name_suffix}/"
+  target_prefix = local.log_bucket_target_prefix
 
   dynamic "target_object_key_format" {
     for_each = length(var.log_bucket_target_object_key_format) > 0 ? ["this"] : []
