@@ -16,6 +16,26 @@ resource "aws_s3_bucket_logging" "remote_state_backend" {
 
   target_bucket = var.log_bucket_id
   target_prefix = local.log_bucket_target_prefix
+
+  dynamic "target_object_key_format" {
+    for_each = length(var.log_bucket_target_object_key_format) > 0 ? ["this"] : []
+
+    content {
+      dynamic "partitioned_prefix" {
+        for_each = try([var.log_bucket_target_object_key_format["partitioned_prefix"]], [])
+
+        content {
+          partition_date_source = partitioned_prefix.value.partition_date_source
+        }
+      }
+
+      dynamic "simple_prefix" {
+        for_each = try([var.log_bucket_target_object_key_format["simple_prefix"]], [])
+
+        content {}
+      }
+    }
+  }
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "remote_state_backend" {
