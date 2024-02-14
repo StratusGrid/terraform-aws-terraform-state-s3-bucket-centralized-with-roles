@@ -130,6 +130,99 @@ output "terraform_state_kms_key_arn" {
 }
 ```
 
+### Example - Minimum IAM Policy
+The following policy represents one containing the fewest actions required to
+apply the module with only required inputs defined. Additional actions may be
+required in order to update or delete this module's resources or if certain
+optional inputs are also defined.
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CreateKMSKeyStatement1",
+      "Effect": "Allow",
+      "Action": ["kms:CreateKey", "kms:ListAliases"],
+      "Resource": ["*"]
+    },
+    {
+      "Sid": "CreateKMSKeyStatement2",
+      "Effect": "Allow",
+      "Action": [
+        "kms:DescribeKey",
+        "kms:EnableKeyRotation",
+        "kms:GetKeyPolicy",
+        "kms:GetKeyRotationStatus",
+        "kms:ListResourceTags",
+        "kms:TagResource"
+      ],
+      "Resource": ["arn:aws:kms:*:111111111111:key/*"]
+    },
+    {
+      "Sid": "CreateKMSKeyStatement3",
+      "Effect": "Allow",
+      "Action": ["kms:CreateAlias"],
+      "Resource": [
+        "arn:aws:kms:*:111111111111:alias/example-remote-state-backend-default-key",
+        "arn:aws:kms:*:111111111111:key/*"
+      ]
+    },
+    {
+      "Sid": "CreateTfStateLockTableStatement1",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:CreateTable",
+        "dynamodb:DescribeContinuousBackups",
+        "dynamodb:DescribeTable",
+        "dynamodb:DescribeTimeToLive",
+        "dynamodb:ListTagsOfResource",
+        "dynamodb:TagResource",
+        "dynamodb:UpdateContinuousBackups"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:*:111111111111:table/example-remote-state-backend"
+      ]
+    },
+    {
+      "Sid": "CreateTfStateLockTableStatement2",
+      "Effect": "Allow",
+      "Action": ["kms:CreateGrant"],
+      "Resource": ["arn:aws:kms:*:111111111111:key/*"]
+    },
+    {
+      "Sid": "CreateTfStateBucketStatement",
+      "Effect": "Allow",
+      "Action": [
+        "s3:CreateBucket",
+        "s3:GetAccelerateConfiguration",
+        "s3:GetBucketAcl",
+        "s3:GetBucketCORS",
+        "s3:GetBucketLogging",
+        "s3:GetBucketObjectLockConfiguration",
+        "s3:GetBucketPolicy",
+        "s3:GetBucketPublicAccessBlock",
+        "s3:GetBucketRequestPayment",
+        "s3:GetBucketTagging",
+        "s3:GetBucketVersioning",
+        "s3:GetBucketWebsite",
+        "s3:GetEncryptionConfiguration",
+        "s3:GetLifecycleConfiguration",
+        "s3:GetReplicationConfiguration",
+        "s3:ListBucket",
+        "s3:PutBucketLogging",
+        "s3:PutBucketPolicy",
+        "s3:PutBucketPublicAccessBlock",
+        "s3:PutBucketTagging",
+        "s3:PutBucketVersioning",
+        "s3:PutEncryptionConfiguration"
+      ],
+      "Resource": ["arn:aws:s3:::example-remote-state-backend"]
+    }
+  ]
+}
+```
+
 ---
 
 ## Resources
