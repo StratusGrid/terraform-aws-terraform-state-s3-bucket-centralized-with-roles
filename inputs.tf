@@ -67,3 +67,26 @@ variable "restrict_public_buckets" {
   type        = bool
   default     = true
 }
+
+variable "dynamodb_table_billing_type" {
+  description = "Defines whether the DynamoDB table used for state locking and consistency checking should use on-demand or provisioned capacity mode."
+  type        = string
+  default     = "PAY_PER_REQUEST"
+
+  validation {
+    condition     = var.dynamodb_table_billing_type == "PAY_PER_REQUEST" || var.dynamodb_table_billing_type == "PROVISIONED"
+    error_message = "The dynamodb_table_billing_type value must be one of two valid options: PAY_PER_REQUEST or PROVISIONED. See https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dynamodb_table#billing_mode for more information."
+  }
+}
+
+variable "dynamodb_table_read_capacity" {
+  description = "Defines the number of read units for the state locking and consistency table. If the dynamodb_table_billing_type is PROVISIONED, this field is required."
+  type        = number
+  default     = 0
+}
+
+variable "dynamodb_table_write_capacity" {
+  description = "Defines the number of write units for the state locking and consistency table. If the dynamodb_table_billing_type is PROVISIONED, this field is required."
+  type        = number
+  default     = 0
+}

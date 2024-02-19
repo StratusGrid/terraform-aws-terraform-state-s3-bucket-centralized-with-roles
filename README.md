@@ -104,21 +104,27 @@ In this case, you just don't specific other accounts. Then, you use the default 
 ```hcl
 module "terraform_state" {
   source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
-  version = "~> 4.1"
+  version = "~> 5.1"
 
-  name_prefix   = var.name_prefix
-  name_suffix   = local.name_suffix
-  log_bucket_id = module.s3_bucket_logging.bucket_id
-  log_bucket_target_prefix = "s3/"
+  name_prefix = var.name_prefix
+  name_suffix = local.name_suffix
+
+  log_bucket_id                       = module.s3_bucket_logging.bucket_id
+  log_bucket_target_prefix            = "s3/"
   log_bucket_target_object_key_format = {
     partitioned_prefix = {
       partition_date_source = "EventTime"
     }
   }
-  account_arns = [
-  ]
+
+  account_arns        = []
   global_account_arns = []
-  input_tags          = merge(local.common_tags, {})
+
+  dynamodb_table_billing_type   = "PROVISIONED"
+  dynamodb_table_read_capacity  = 1
+  dynamodb_table_write_capacity = 1
+
+  input_tags = merge(local.common_tags, {})
 }
 
 output "terraform_state_kms_key_alias_arn" {
@@ -158,6 +164,9 @@ output "terraform_state_kms_key_arn" {
 | <a name="input_account_arns"></a> [account\_arns](#input\_account\_arns) | Arns for accounts / roles in accounts which are given a role they are able to assume to access their state. | `list(string)` | `[]` | no |
 | <a name="input_block_public_acls"></a> [block\_public\_acls](#input\_block\_public\_acls) | Blocks public ACLs on the bucket. | `bool` | `true` | no |
 | <a name="input_block_public_policy"></a> [block\_public\_policy](#input\_block\_public\_policy) | Whether Amazon S3 should block public bucket policies for this bucket. | `bool` | `true` | no |
+| <a name="input_dynamodb_table_billing_type"></a> [dynamodb\_table\_billing\_type](#input\_dynamodb\_table\_billing\_type) | Defines whether the DynamoDB table used for state locking and consistency checking should use on-demand or provisioned capacity mode. | `string` | `"PAY_PER_REQUEST"` | no |
+| <a name="input_dynamodb_table_read_capacity"></a> [dynamodb\_table\_read\_capacity](#input\_dynamodb\_table\_read\_capacity) | Defines the number of read units for the state locking and consistency table. If the dynamodb\_table\_billing\_type is PROVISIONED, this field is required. | `number` | `0` | no |
+| <a name="input_dynamodb_table_write_capacity"></a> [dynamodb\_table\_write\_capacity](#input\_dynamodb\_table\_write\_capacity) | Defines the number of write units for the state locking and consistency table. If the dynamodb\_table\_billing\_type is PROVISIONED, this field is required. | `number` | `0` | no |
 | <a name="input_global_account_arns"></a> [global\_account\_arns](#input\_global\_account\_arns) | Arns for a account(s) / roles in account(s) that would be allowed access to all account states, for instance a global users account. Restrictions of which of that accounts users were able to access a given state would need to be further restricted inside of the global account(s) themselves. | `list(string)` | `[]` | no |
 | <a name="input_ignore_public_acls"></a> [ignore\_public\_acls](#input\_ignore\_public\_acls) | Whether Amazon S3 should ignore public ACLs for this bucket. Causes Amazon S3 to ignore public ACLs on this bucket and any objects that it contains. | `bool` | `true` | no |
 | <a name="input_input_tags"></a> [input\_tags](#input\_input\_tags) | Map of tags to apply to resources | `map(string)` | `{}` | no |
