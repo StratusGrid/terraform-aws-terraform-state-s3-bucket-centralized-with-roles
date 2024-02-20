@@ -1,20 +1,26 @@
 module "terraform_state" {
   source  = "StratusGrid/terraform-state-s3-bucket-centralized-with-roles/aws"
-  version = "~> 4.1"
+  version = "~> 5.1"
 
-  name_prefix   = var.name_prefix
-  name_suffix   = local.name_suffix
-  log_bucket_id = module.s3_bucket_logging.bucket_id
-  log_bucket_target_prefix = "s3/"
+  name_prefix = var.name_prefix
+  name_suffix = local.name_suffix
+
+  log_bucket_id                       = module.s3_bucket_logging.bucket_id
+  log_bucket_target_prefix            = "s3/"
   log_bucket_target_object_key_format = {
     partitioned_prefix = {
       partition_date_source = "EventTime"
     }
   }
-  account_arns = [
-  ]
+
+  account_arns        = []
   global_account_arns = []
-  input_tags          = merge(local.common_tags, {})
+
+  dynamodb_table_billing_type   = "PROVISIONED"
+  dynamodb_table_read_capacity  = 1
+  dynamodb_table_write_capacity = 1
+
+  input_tags = merge(local.common_tags, {})
 }
 
 output "terraform_state_kms_key_alias_arn" {
