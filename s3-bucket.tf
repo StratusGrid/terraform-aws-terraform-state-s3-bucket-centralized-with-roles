@@ -39,12 +39,24 @@ resource "aws_s3_bucket_logging" "remote_state_backend" {
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "remote_state_backend" {
-  bucket = aws_s3_bucket.remote_state_backend.bucket
+  count = var.aws_s3_bucket_server_side_encryption_type != "AWS_DEFAULT" ? 1 : 0
 
-  rule {
-    apply_server_side_encryption_by_default {
-      kms_master_key_id = aws_kms_key.remote_state_backend.arn
-      sse_algorithm     = "aws:kms"
+  bucket = aws_s3_bucket.remote_state_backend.bucket
+  dynamic "rule" {
+    for_each = var.aws_s3_bucket_server_side_encryption_type == "SSE_S3" ? [1] : []
+    content {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+  dynamic "rule" {
+    for_each = var.aws_s3_bucket_server_side_encryption_type == "SSE_KMS" ? [1] : []
+    content {
+      apply_server_side_encryption_by_default {
+        kms_master_key_id = aws_kms_key.remote_state_backend.arn
+        sse_algorithm     = "aws:kms"
+      }
     }
   }
 }
