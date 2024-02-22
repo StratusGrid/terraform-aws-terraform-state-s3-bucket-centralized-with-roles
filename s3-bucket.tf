@@ -39,6 +39,8 @@ resource "aws_s3_bucket_logging" "remote_state_backend" {
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "remote_state_backend" {
+  count = var.enable_encryption == true ? 1 : 0
+
   bucket = aws_s3_bucket.remote_state_backend.bucket
 
   rule {

@@ -90,3 +90,9 @@ variable "dynamodb_table_write_capacity" {
   type        = number
   default     = 0
 }
+
+variable "enable_encryption" {
+  description = "Allows disable the the bucket encryption configuration"
+  type        = bool
+  default     = true
+}
