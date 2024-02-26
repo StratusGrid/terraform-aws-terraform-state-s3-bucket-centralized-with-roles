@@ -162,6 +162,7 @@ output "terraform_state_kms_key_arn" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_account_arns"></a> [account\_arns](#input\_account\_arns) | Arns for accounts / roles in accounts which are given a role they are able to assume to access their state. | `list(string)` | `[]` | no |
+| <a name="input_aws_s3_bucket_server_side_encryption_type"></a> [aws\_s3\_bucket\_server\_side\_encryption\_type](#input\_aws\_s3\_bucket\_server\_side\_encryption\_type) | Selection of the bucket encryption type | `string` | `"SSE_KMS"` | no |
 | <a name="input_block_public_acls"></a> [block\_public\_acls](#input\_block\_public\_acls) | Blocks public ACLs on the bucket. | `bool` | `true` | no |
 | <a name="input_block_public_policy"></a> [block\_public\_policy](#input\_block\_public\_policy) | Whether Amazon S3 should block public bucket policies for this bucket. | `bool` | `true` | no |
 | <a name="input_dynamodb_table_billing_type"></a> [dynamodb\_table\_billing\_type](#input\_dynamodb\_table\_billing\_type) | Defines whether the DynamoDB table used for state locking and consistency checking should use on-demand or provisioned capacity mode. | `string` | `"PAY_PER_REQUEST"` | no |
