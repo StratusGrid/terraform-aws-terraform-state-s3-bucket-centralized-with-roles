@@ -55,6 +55,16 @@ content: |-
   {{ include "examples/no_trusted_accounts.tfnot" }}
   ```
 
+  ### Example - Minimum IAM Policy
+  The following policy represents one containing the fewest actions required to
+  apply the module with only required inputs defined. Additional actions may be
+  required in order to update or delete this module's resources or if certain
+  optional inputs are also defined.
+
+  ```json
+  {{ include "examples/minimum_iam_policy.json" }}
+  ```
+
   ---
 
   {{ .Resources }}
