@@ -38,6 +38,8 @@ resource "aws_s3_bucket_logging" "remote_state_backend" {
   }
 }
 
+#trivy:ignore:AVD-AWS-0132 - ignored because the bucket already allows for encryption with a count var
+#trivy:ignore:AVD-AWS-0088 - ignored because the bucket already allows for encryption with a count var
 resource "aws_s3_bucket_server_side_encryption_configuration" "remote_state_backend" {
   count = var.aws_s3_bucket_server_side_encryption_type != "AWS_DEFAULT" ? 1 : 0
 
